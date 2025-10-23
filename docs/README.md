@@ -1,6 +1,6 @@
 # OnePlus Archive
 
-<img src="assets/logo.png" width="96" alt="OnePlus Archive Logo">
+<img src="../assets/logo.png" width="96" alt="OnePlus Archive Logo">
 
 [![Hits](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2Fspike0en%2Foplus_firmware_archive&label=Hits&icon=github&color=%23b02a37&labelColor=2E2E3F)](https://github.com/spike0en/oplus_firmware_archive) 
 
