@@ -1,4 +1,4 @@
-name: Nothing Firmware Dumper
+name: Oneplus Firmware Dumper
 
 on:
   workflow_dispatch:
@@ -6,20 +6,52 @@ on:
       urls:
         description: 'URLs (comma or space separated)'
         required: true
+      region:
+        description: 'Region'
+        required: true
+        type: choice
+        options:
+          - IN
+          - NA
+          - CN
+          - EU
+          - GLO
+          - ROW
       name:
         description: 'Release tag'
-        required: false     
+        required: false
+      run_maximize_build_space:
+        description: 'Run maximize-build-space?'
+        required: true
+        type: boolean
+        default: false        
 
 jobs:
   dump:
     permissions: write-all
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: ubuntu-latest
 
-    steps:        
+    steps:
+    - name: Run maximize-build-space
+      if: github.event.inputs.run_maximize_build_space == 'true'
+      uses: easimon/maximize-build-space@master
+      with:
+        remove-android: 'true'
+        remove-dotnet: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        
     - name: Checkout repo
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Setup environment
+      run: |
+        sudo apt update
+        sudo apt -y install aria2 zstd p7zip-full parallel openssl xxhash jq
+        python3 -m pip install gdown
 
     - name: Set script permissions
       run: chmod +x scripts/dump.sh
@@ -29,6 +61,7 @@ jobs:
       run: |
         IFS=',' read -ra URLS <<< "${{ inputs.urls }}"
         export INPUT_NAME="${{ inputs.name }}"
+        export INPUT_REGION="${{ inputs.region }}"
         for url in "${URLS[@]}"; do
           echo "$url"
         done | xargs ./scripts/dump.sh

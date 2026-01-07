@@ -1,83 +1,77 @@
 {
   "devices": {
-    "Asteroids": {
-      "boot_partitions": [
-        "boot", "dtbo", "init_boot", "recovery", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
-      ],
-      "logical_partitions": [
-        "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
-      ]
-    },
-    "AsteroidsPro": {
-      "boot_partitions": [
-        "boot", "dtbo", "init_boot", "recovery", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
-      ],
-      "logical_partitions": [
-        "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
-      ]
-    },    
-    "Galaga": {
-      "boot_partitions": [
-        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta"
-      ],
-      "logical_partitions": [
-        "odm", "odm_dlkm", "product", "system", "system_dlkm", "system_ext", "vbmeta_system", "vbmeta_vendor", "vendor", "vendor_dlkm"
-      ]
-    },
-    "Galaxian": {
-      "boot_partitions": [
-        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
-      ],
-      "logical_partitions": [
-        "odm", "odm_dlkm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
-      ]
-    },
-    "Metroid": {
+    "infiniti": ["PLK110", "CPH2749", "CPH2745", "CPH2747"],
+    "ktm": ["PLQ110"],
+    "erhai": ["OPD2413", "OPD2415"],
+    "dodge": ["PJZ110", "CPH2649", "CPH2655", "CPH2653"],
+    "pagani": ["PKX110", "CPH2723"],
+    "giulia": ["PKG110", "CPH2691", "CPH2645"],
+    "waffle": ["PJD110", "CPH2573", "CPH2583", "CPH2581"],
+    "aston": ["PJE110", "CPH2585", "CPH2609"]
+  },
+  "definitions": {
+    "infiniti": {
       "boot_partitions": [
         "boot", "dtbo", "init_boot", "recovery", "vbmeta", "vbmeta_system", "vbmeta_vendor", "vendor_boot"
       ],
-      "logical_partitions": [
-        "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
+      "firmware_partitions": [
+        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
       ]
     },
-    "Pacman": {
+    "ktm": {
       "boot_partitions": [
-        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta"
+        "boot", "dtbo", "init_boot", "recovery", "vbmeta", "vbmeta_system", "vbmeta_vendor", "vendor_boot"
       ],
-      "logical_partitions": [
-        "odm", "odm_dlkm", "product", "system", "system_dlkm", "system_ext", "vbmeta_system", "vbmeta_vendor", "vendor", "vendor_dlkm"
+      "firmware_partitions": [
+        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
       ]
     },
-    "PacmanPro": {
+    "dodge": {
       "boot_partitions": [
-        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta"
+        "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "logical_partitions": [
-        "odm", "odm_dlkm", "product", "system", "system_dlkm", "system_ext", "vbmeta_system", "vbmeta_vendor", "vendor", "vendor_dlkm"
-      ]
-    },    
-    "Pong": {
-      "boot_partitions": [
-        "boot", "dtbo", "recovery", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
-      ],
-      "logical_partitions": [
-        "odm", "product", "system", "system_ext", "vendor", "vendor_dlkm"
+      "firmware_partitions": [
+        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
       ]
     },
-    "Spacewar": {
+    "pagani": {
       "boot_partitions": [
-        "boot", "dtbo", "vendor_boot", "vbmeta"
+        "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "logical_partitions": [
-        "odm", "product", "system", "system_ext", "vbmeta_system", "vendor"
+      "firmware_partitions": [
+        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
       ]
     },
-    "Tetris": {
+    "erhai": {
       "boot_partitions": [
-        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta"
+        "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "logical_partitions": [
-        "odm", "odm_dlkm", "product", "system", "system_dlkm", "system_ext", "vbmeta_system", "vbmeta_vendor", "vendor", "vendor_dlkm"
+      "firmware_partitions": [
+        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
+      ]
+    },
+    "giulia": {
+      "boot_partitions": [
+        "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
+      ],
+      "firmware_partitions": [
+        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      ]
+    },
+    "waffle": {
+      "boot_partitions": [
+        "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
+      ],
+      "firmware_partitions": [
+        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      ]
+    },
+    "aston": {
+      "boot_partitions": [
+        "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
+      ],
+      "firmware_partitions": [
+        "abl", "aop", "aop_config", "bluetooth", "cpucp", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
       ]
     }
   }

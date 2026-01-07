@@ -83,16 +83,16 @@ extract_fingerprint() {
     unzip -p ota.zip META-INF/com/android/metadata | grep "^post-build=" | cut -d'=' -f2 || echo "InvalidFingerprint"
 }
 
-# Extract the POST_OTA_VERSION from payload_properties.txt
+# Extract the version_name from metadata
 extract_version() {
-    unzip -p ota.zip payload_properties.txt | grep "^POST_OTA_VERSION=" | cut -d'=' -f2 || echo "UnknownVersion"
+    unzip -p ota.zip META-INF/com/android/metadata | grep "^version_name=" | cut -d'=' -f2 || echo "UnknownVersion"
 }
 
-# Detect the device model by searching metadata/properties for device model keywords from devices.json
+# Detect the device model by searching metadata/properties for model IDs from devices.json
 detect_model() {
     local detected_model="UnknownModel"
-    # Use absolute path for devices.json
-    local models=$(jq -r '.devices | keys[]' "$DEVICES_JSON")
+    # Use absolute path for devices.json - extract all values from the arrays in .devices
+    local models=$(jq -r '.devices | values[] | .[]' "$DEVICES_JSON")
     if [ -z "$models" ]; then
         echo "Error: Could not read models from $DEVICES_JSON or jq is not installed." >&2
         echo "$detected_model"
@@ -155,7 +155,7 @@ rm ota.zip
 
 # === Prepare Working Directories ===
 echo "Creating required directories..."
-mkdir -p ota out dyn syn
+mkdir -p ota out dyn boot
 
 # Extract images from the main payload using absolute path for ota_extractor
 "$OTA_EXTRACTOR" -output_dir ota -payload payload_working.bin || { echo "Error: Failed to extract initial payload"; rm -f payload_working.bin; exit 1; } # Basic cleanup
@@ -171,7 +171,7 @@ for i in "$@"; do
     download_file "$i"
     unzip ota.zip payload.bin || { echo "Failed to unzip incremental payload"; rm -f ota.zip; exit 1; }
     mv payload.bin payload_working.bin
-    TAG=$(extract_version) # Update TAG (release name) to the latest POST_OTA_VERSION
+    TAG=$(extract_version) # Update TAG (release name) to the latest version_name
     FINGERPRINT=$(extract_fingerprint)  # Update fingerprint for the latest incremental
     BODY="$BODY -> [$TAG]($i)"
     rm ota.zip
@@ -197,13 +197,22 @@ fi
 # === Fetch Partition Information ===
 echo "Fetching partition lists for model: $MODEL"
 
+# Map model ID to codename if exists, otherwise use model ID directly
+CODENAME=$(jq -r --arg model "$MODEL" '
+    .devices | to_entries | .[] | select(.value | contains([$model])) | .key
+' "$DEVICES_JSON")
+
+# If codename is empty (not found in devices mapping), default to MODEL itself
+[ -z "$CODENAME" ] && CODENAME="$MODEL"
+echo "Resolved codename: $CODENAME"
+
 # Get partition lists dynamically from devices.json using jq with absolute path
-BOOT_PARTITIONS=$(jq -r --arg model "$MODEL" '.devices[$model].boot_partitions | join(" ")' "$DEVICES_JSON")
-LOGICAL_PARTITIONS=$(jq -r --arg model "$MODEL" '.devices[$model].logical_partitions | join(" ")' "$DEVICES_JSON")
+BOOT_PARTITIONS=$(jq -r --arg codename "$CODENAME" '.definitions[$codename].boot_partitions | join(" ")' "$DEVICES_JSON")
+LOGICAL_PARTITIONS=$(jq -r --arg codename "$CODENAME" '.definitions[$codename].logical_partitions | join(" ")' "$DEVICES_JSON")
 
 # Check if partitions were successfully retrieved
 if [ -z "$BOOT_PARTITIONS" ] || [ "$BOOT_PARTITIONS" == "null" ] || [ -z "$LOGICAL_PARTITIONS" ] || [ "$LOGICAL_PARTITIONS" == "null" ]; then
-    echo "Error: Could not find partition info for model '$MODEL' in $DEVICES_JSON or jq failed." >&2
+    echo "Error: Could not find partition info for codename '$CODENAME' (model '$MODEL') in $DEVICES_JSON or jq failed." >&2
     # Clean up intermediate files if they exist
     rm -f ota.zip payload_working.bin
     exit 1
@@ -218,16 +227,19 @@ echo "Generating file hashes using $PARALLEL_JOBS parallel jobs..."
 # Switch to the directory containing extracted images
 cd ota
 
+# Sanitize filename for assets (replace ( ) with - and append region)
+SAFE_TAG=$(echo "${TAG}_${INPUT_REGION}" | sed 's/[()]/-/g' | sed 's/--/-/g' | sed 's/-$//' | sed 's/ /_/g')
+
 # Generate SHA-256 hashes for all extracted image files with parallel processing
 echo "--- SHA256 Hashes ---"
-ls * | parallel -j $PARALLEL_JOBS "openssl dgst -sha256 -r" 2>/dev/null | sort -k2 -V | tee ../out/${TAG}-hash.sha256
+ls * | parallel -j $PARALLEL_JOBS "openssl dgst -sha256 -r" 2>/dev/null | sort -k2 -V | tee ../out/${SAFE_TAG}-hash.sha256
 
 # === Organize Images ===
 echo "Organizing images..."
-# Move boot-related images to `syn` directory
+# Move boot-related images to `boot` directory
 for f in $BOOT_PARTITIONS; do
     # Check if file exists before moving
-    [ -f "${f}.img" ] && mv "${f}.img" ../syn
+    [ -f "${f}.img" ] && mv "${f}.img" ../boot
 done
 
 # Move logical partition images to `dyn` directory
@@ -242,36 +254,34 @@ echo "Archiving images using optimized compression settings..."
 # Archive boot, firmware (remaining in ota), and logical images in parallel
 # Remove source directories after successful archiving
 # Perform directory checks before attempting to archive
-if [ -d "../syn" ] && [ "$(ls -A ../syn 2>/dev/null)" ]; then
-    (cd ../syn && 7z a -mmt$COMPRESSION_THREADS -mx6 ../out/${TAG}-image-boot.7z * && rm -rf ../syn) &
+if [ -d "../boot" ] && [ "$(ls -A ../boot 2>/dev/null)" ]; then
+    (cd ../boot && 7z a -mmt$COMPRESSION_THREADS -mx6 ../out/${SAFE_TAG}-image-boot.7z * && rm -rf ../boot) &
 fi
 
 if [ -d "../ota" ] && [ "$(ls -A ../ota 2>/dev/null)" ]; then
-    (cd ../ota && 7z a -mmt$COMPRESSION_THREADS -mx6 ../out/${TAG}-image-firmware.7z * && rm -rf ../ota) &
+    (cd ../ota && 7z a -mmt$COMPRESSION_THREADS -mx6 ../out/${SAFE_TAG}-image-firmware.7z * && rm -rf ../ota) &
 fi
 
 if [ -d "../dyn" ] && [ "$(ls -A ../dyn 2>/dev/null)" ]; then
-    (cd ../dyn && 7z a -mmt$COMPRESSION_THREADS -mx6 -v1900m ../out/${TAG}-image-logical.7z * && rm -rf ../dyn) &
+    (cd ../dyn && 7z a -mmt$COMPRESSION_THREADS -mx6 -v2000m ../out/${SAFE_TAG}-image-logical.7z * && rm -rf ../dyn) &
 fi
 
 wait
 
 # === Set GitHub Actions Outputs ===
 echo "Setting GitHub Actions outputs..."
-# Determine the release tag name: use input name if provided, otherwise use extracted tag
-RELEASE_TAG_NAME="$TAG" # Default to extracted tag
+# Determine the release tag name: append region to TAG
+RELEASE_TAG_NAME="${TAG}_${INPUT_REGION}"
 if [ -n "$INPUT_NAME" ]; then
     echo "Using provided input name '$INPUT_NAME' as release tag name."
     RELEASE_TAG_NAME="$INPUT_NAME"
-else
-    echo "No input name provided, using extracted tag '$TAG' as release tag name."
 fi
 
 # Output tag name, release name, and release body for the release action
 if [ -n "$GITHUB_OUTPUT" ]; then
     {
         echo "release_tag=$RELEASE_TAG_NAME"
-        echo "release_name=$TAG"
+        echo "release_name=$RELEASE_TAG_NAME"
         echo "body<<EOF"
         echo "$BODY"
         echo "EOF"
