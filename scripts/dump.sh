@@ -199,11 +199,13 @@ echo "Fetching partition lists for model: $MODEL"
 
 # Map model ID to codename if exists, otherwise use model ID directly
 CODENAME=$(jq -r --arg model "$MODEL" '
-    .devices | to_entries | .[] | select(.value | contains([$model])) | .key
-' "$DEVICES_JSON")
+    .devices | to_entries[] | select(.value | contains([$model])) | .key
+' "$DEVICES_JSON" | head -n 1)
 
-# If codename is empty (not found in devices mapping), default to MODEL itself
-[ -z "$CODENAME" ] && CODENAME="$MODEL"
+# If codename is empty or null, default to MODEL itself
+if [ -z "$CODENAME" ] || [ "$CODENAME" == "null" ]; then
+    CODENAME="$MODEL"
+fi
 echo "Resolved codename: $CODENAME"
 
 # Get partition lists dynamically from devices.json using jq with absolute path
