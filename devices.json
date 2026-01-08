@@ -14,64 +14,64 @@
       "boot_partitions": [
         "boot", "dtbo", "init_boot", "recovery", "vbmeta", "vbmeta_system", "vbmeta_vendor", "vendor_boot"
       ],
-      "firmware_partitions": [
-        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "ktm": {
       "boot_partitions": [
         "boot", "dtbo", "init_boot", "recovery", "vbmeta", "vbmeta_system", "vbmeta_vendor", "vendor_boot"
       ],
-      "firmware_partitions": [
-        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "dodge": {
       "boot_partitions": [
         "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "pagani": {
       "boot_partitions": [
         "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "erhai": {
       "boot_partitions": [
         "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop", "aop_config", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "pdp", "pdp_cdb", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug", "splash", "spuservice", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "giulia": {
       "boot_partitions": [
         "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "waffle": {
       "boot_partitions": [
         "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop_config", "aop", "bluetooth", "cpucp", "cpucp_dtb", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl_config", "xbl_ramdump", "xbl"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     },
     "aston": {
       "boot_partitions": [
         "boot", "dtbo", "init_boot", "vendor_boot", "vbmeta", "vbmeta_system", "vbmeta_vendor"
       ],
-      "firmware_partitions": [
-        "abl", "aop", "aop_config", "bluetooth", "cpucp", "devcfg", "dsp", "engineering_cdt", "featenabler", "hyp", "imagefv", "keymaster", "modem", "oplus_sec", "oplusstanvbk", "qupfw", "shrm", "splash", "tz", "uefi", "uefisecapp", "xbl", "xbl_config", "xbl_ramdump"
+      "logical_partitions": [
+        "my_bigball", "my_carrier", "my_engineering", "my_heytap", "my_manifest", "my_product", "my_region", "my_stock", "odm", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
       ]
     }
   }
