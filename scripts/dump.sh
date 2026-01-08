@@ -138,7 +138,7 @@ echo "Detected model: $MODEL"
 
 if [ "$MODEL" == "UnknownModel" ]; then
     echo "Error: Auto model detection has failed!" >&2
-    rm -f ota.zip # Basic cleanup
+    rm -f ota.zip
     exit 1
 fi
 
@@ -230,7 +230,7 @@ echo "Generating file hashes using $PARALLEL_JOBS parallel jobs..."
 cd ota
 
 # Sanitize filename for assets (replace ( ) with - and append region)
-SAFE_TAG=$(echo "${TAG}_${INPUT_REGION}" | sed 's/[()]/-/g' | sed 's/--/-/g' | sed 's/-$//' | sed 's/ /_/g')
+SAFE_TAG=$(echo "${MODEL}_${TAG}_${INPUT_REGION}" | sed 's/[()]/-/g' | sed 's/--/-/g' | sed 's/-$//' | sed 's/ /_/g')
 
 # Generate SHA-256 hashes for all extracted image files with parallel processing
 echo "--- SHA256 Hashes ---"
@@ -240,13 +240,11 @@ ls * | parallel -j $PARALLEL_JOBS "openssl dgst -sha256 -r" 2>/dev/null | sort -
 echo "Organizing images..."
 # Move boot-related images to `boot` directory
 for f in $BOOT_PARTITIONS; do
-    # Check if file exists before moving
     [ -f "${f}.img" ] && mv "${f}.img" ../boot
 done
 
 # Move logical partition images to `dyn` directory
 for f in $LOGICAL_PARTITIONS; do
-    # Check if file exists before moving
     [ -f "${f}.img" ] && mv "${f}.img" ../dyn
 done
 
@@ -272,11 +270,12 @@ wait
 
 # === Set GitHub Actions Outputs ===
 echo "Setting GitHub Actions outputs..."
-# Determine the release tag name: append region to TAG
-RELEASE_TAG_NAME="${TAG}_${INPUT_REGION}"
 if [ -n "$INPUT_NAME" ]; then
-    echo "Using provided input name '$INPUT_NAME' as release tag name."
-    RELEASE_TAG_NAME="$INPUT_NAME"
+    CLEAN_NAME="${INPUT_NAME%-}"
+    RELEASE_TAG_NAME="${MODEL}_${CLEAN_NAME}_${INPUT_REGION}"
+    echo "Using provided input name '$INPUT_NAME', cleaned to '$CLEAN_NAME', as release tag name."
+else
+    RELEASE_TAG_NAME="${MODEL}_${TAG}_${INPUT_REGION}"
 fi
 
 # Output tag name, release name, and release body for the release action
