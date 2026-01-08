@@ -230,7 +230,7 @@ echo "Generating file hashes using $PARALLEL_JOBS parallel jobs..."
 cd ota
 
 # Sanitize filename for assets (replace ( ) with - and append region)
-SAFE_TAG=$(echo "${MODEL}_${TAG}_${INPUT_REGION}" | sed 's/[()]/-/g' | sed 's/--/-/g' | sed 's/-$//' | sed 's/ /_/g')
+SAFE_TAG=$(echo "${TAG}_${INPUT_REGION}" | sed 's/(/-/g' | sed 's/)//g' | sed 's/--/-/g' | sed 's/-$//' | sed 's/ /_/g')
 
 # Generate SHA-256 hashes for all extracted image files with parallel processing
 echo "--- SHA256 Hashes ---"
