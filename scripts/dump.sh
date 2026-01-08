@@ -272,10 +272,10 @@ wait
 echo "Setting GitHub Actions outputs..."
 if [ -n "$INPUT_NAME" ]; then
     CLEAN_NAME="${INPUT_NAME%-}"
-    RELEASE_TAG_NAME="${MODEL}_${CLEAN_NAME}_${INPUT_REGION}"
+    RELEASE_TAG_NAME="${CLEAN_NAME}_${INPUT_REGION}"
     echo "Using provided input name '$INPUT_NAME', cleaned to '$CLEAN_NAME', as release tag name."
 else
-    RELEASE_TAG_NAME="${MODEL}_${TAG}_${INPUT_REGION}"
+    RELEASE_TAG_NAME="${TAG}_${INPUT_REGION}"
 fi
 
 # Output tag name, release name, and release body for the release action
