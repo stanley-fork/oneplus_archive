@@ -47,23 +47,43 @@ if command -v free >/dev/null 2>&1; then
 fi
 
 # === Helper Functions ===
+
 # Download ota file using gdown (for Google Drive links)
 download_with_gdown() {
     echo "Downloading with gdown: $1"
     gdown --fuzzy "$1" -O ota.zip
 }
 
-# Download ota file using aria2c (for other URLs) with proper connection limits
+# Download OTA using aria2c
 download_with_aria2c() {
-    echo "Downloading with aria2c using $ARIA2C_CONNECTIONS connections: $1"
-    # Respect aria2c's max-connection-per-server limit of 16
-    aria2c -x$ARIA2C_CONNECTIONS -s$ARIA2C_CONNECTIONS "$1" -o ota.zip
+    local url="$1"
+    local connections splits
+
+    if [[ "$url" == *"android.googleapis.com"* || "$url" == *"gvt1.com"* ]]; then
+        connections=3
+        splits=3
+        echo "Google OTA detected – using $connections connections and $splits splits"
+    else
+        connections=$ARIA2C_CONNECTIONS
+        splits=$ARIA2C_CONNECTIONS
+        echo "Normal URL – using $connections connections"
+    fi
+
+    rm -f ota.zip.aria2  # cleanup stale state
+
+    aria2c -x"$connections" -s"$splits" --retry-wait=5 --max-tries=3 --continue=true \
+        "$url" -o ota.zip \
+    || {
+        echo "aria2c failed – falling back to curl"
+        curl -L --fail --retry 10 --retry-delay 5 -o ota.zip "$url"
+    }
 }
 
 # Determine the correct download method based on URL and calls it
 download_file() {
     local url="$1"
     echo "Processing URL: $url"
+
     if [[ "$url" == *"drive.google.com"* ]]; then
         download_with_gdown "$url"
     else
