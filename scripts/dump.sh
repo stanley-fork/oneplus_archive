@@ -108,10 +108,9 @@ extract_version() {
     unzip -p ota.zip META-INF/com/android/metadata | grep "^version_name=" | cut -d'=' -f2 || echo "UnknownVersion"
 }
 
-# Detect the device model by searching metadata/properties for model IDs from devices.json
+# Device model auto detection
 detect_model() {
     local detected_model="UnknownModel"
-    # Use absolute path for devices.json - extract all values from the arrays in .devices
     local models=$(jq -r '.devices | values[] | .[]' "$DEVICES_JSON")
     if [ -z "$models" ]; then
         echo "Error: Could not read models from $DEVICES_JSON or jq is not installed." >&2
@@ -123,10 +122,8 @@ detect_model() {
     local metadata_content=$(unzip -p ota.zip META-INF/com/android/metadata 2>/dev/null || echo "")
     if [ -n "$metadata_content" ]; then
         for model in $models; do
-            # Use grep -qi for quiet, case-insensitive check
-            if echo "$metadata_content" | grep -qi "\b$model\b"; then
-                detected_model="$model"
-                echo "$detected_model"
+            if echo "$metadata_content" | grep -qi "$model"; then
+                echo "$model"
                 return
             fi
         done
@@ -134,17 +131,16 @@ detect_model() {
 
     # If not found in metadata, check payload_properties.txt
     local properties_content=$(unzip -p ota.zip payload_properties.txt 2>/dev/null || echo "")
-     if [ -n "$properties_content" ]; then
+    if [ -n "$properties_content" ]; then
         for model in $models; do
-             if echo "$properties_content" | grep -qi "\b$model\b"; then # Use grep -qi
-                detected_model="$model"
-                echo "$detected_model"
+            if echo "$properties_content" | grep -qi "$model"; then
+                echo "$model"
                 return
             fi
         done
     fi
 
-    echo "$detected_model" # Return "UnknownModel" if no match
+    echo "$detected_model"
 }
 
 # === Download and Model Detection ===
