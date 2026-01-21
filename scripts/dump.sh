@@ -111,34 +111,22 @@ extract_version() {
 # Device model auto detection
 detect_model() {
     local detected_model="UnknownModel"
-    local models=$(jq -r '.devices | values[] | .[]' "$DEVICES_JSON")
-    if [ -z "$models" ]; then
-        echo "Error: Could not read models from $DEVICES_JSON or jq is not installed." >&2
-        echo "$detected_model"
-        return
-    fi
 
-    # Check metadata first
+    # Read the entire metadata and payload_properties
     local metadata_content=$(unzip -p ota.zip META-INF/com/android/metadata 2>/dev/null || echo "")
-    if [ -n "$metadata_content" ]; then
-        for model in $models; do
-            if echo "$metadata_content" | grep -qi "$model"; then
-                echo "$model"
-                return
-            fi
-        done
-    fi
-
-    # If not found in metadata, check payload_properties.txt
     local properties_content=$(unzip -p ota.zip payload_properties.txt 2>/dev/null || echo "")
-    if [ -n "$properties_content" ]; then
-        for model in $models; do
-            if echo "$properties_content" | grep -qi "$model"; then
-                echo "$model"
+    local combined_content="$metadata_content$properties_content"
+
+    # Loop over device codenames
+    for codename in $(jq -r '.devices | keys[]' "$DEVICES_JSON"); do
+        for model in $(jq -r ".devices[\"$codename\"] | .[]" "$DEVICES_JSON"); do
+            if echo "$combined_content" | grep -qi "$model"; then
+                detected_model="$codename"
+                echo "$detected_model"
                 return
             fi
         done
-    fi
+    done
 
     echo "$detected_model"
 }
