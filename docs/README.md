@@ -15,7 +15,7 @@
 
 ## Overview 🔍
 
-This project is an a firmware repository of OxygenOS & ColorOS, offering stock OTA images for **OnePlus** phones. All files are [archived](https://archive.org/details/oneplus_archive), ensuring easy access and long-term preservation.
+This project a firmware repository of OxygenOS & ColorOS, offering stock OTA images for **OnePlus** phones.
 
 ### Key features:
 - Helps in restoring stock firmware and recovery from soft‑bricks.
